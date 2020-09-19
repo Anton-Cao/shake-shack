@@ -2,6 +2,8 @@ import axios from 'axios';
   
 import React,{Component} from 'react'; 
 import { Button } from 'react-bootstrap';
+import { v4 as uuidv4 } from 'uuid';
+import { Redirect } from 'react-router-dom';
   
 class FileUpload extends Component { 
    
@@ -10,6 +12,8 @@ class FileUpload extends Component {
       // Initially, no file is selected 
       selectedFile: null,
       isCsv: true,
+      redirect: false,
+      key: null,
     }; 
      
     // On file select (from the pop up) 
@@ -35,18 +39,20 @@ class FileUpload extends Component {
       const formData = new FormData(); 
      
       // Update the formData object 
+      const key = uuidv4();
       formData.append( 
-        "myFile", 
+        key, 
         this.state.selectedFile, 
         this.state.selectedFile.name 
       ); 
-     
-      // Details of the uploaded file 
-      console.log(this.state.selectedFile); 
+
+      console.log(this.state.selectedFile);
+      console.log(key);
      
       // Request made to the backend api 
       // Send formData object 
       axios.post("api/uploadfile", formData); 
+      this.setState({redirect: true, key: key});
     }; 
      
     // File content to be displayed after 
@@ -77,11 +83,18 @@ class FileUpload extends Component {
             )
         }
     }
+    
+    redirect = () => {
+        if (this.state.redirect) {
+            return <Redirect to ={'/'+this.state.key}  />
+        }
+    }
      
     render() { 
      
       return ( 
         <div className="upload"> 
+            {this.redirect()}
             <h3> 
               Upload your data in a .csv here!
             </h3> 
