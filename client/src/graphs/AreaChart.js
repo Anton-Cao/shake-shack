@@ -15,18 +15,46 @@ var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 const geoUrl = "https://cdn.jsdelivr.net/npm/us-atlas@3/counties-10m.json";
 
-const colorScale = scaleQuantize()
+const pinkScale = scaleQuantize()
   .domain([1, 10])
   .range([
-    "#ffedea",
-    "#ffcec5",
-    "#ffad9f",
-    "#ff8a75",
-    "#ff5533",
-    "#e2492d",
-    "#be3d26",
-    "#9a311f",
-    "#782618"
+    "#FFFFFF",
+    "#FCD9E6",
+    "#F9B4CD",
+    "#F68EB4",
+    "#F3689B",
+    "#F04282",
+    "#ED1D69",
+    "#D01157",
+    "#AA0E47"
+  ]);
+
+  const blueScale = scaleQuantize()
+  .domain([1, 10])
+  .range([
+    "#FFFFFF",
+    "#D6FAFF",
+    "#ADF4FF",
+    "#85EFFF",
+    "#5CE9FF",
+    "#33E4FF",
+    "#0ADEFF",
+    "#00C2E0",
+    "#009FB7"
+  ]);
+
+  const purpleScale = scaleQuantize()
+  .domain([1, 10])
+  .range([
+    "#FFFFFF",
+    "#EADBFA",
+    "#D4B7F5",
+    "#BF93F0",
+    "#A96FEB",
+    "#944BE7",
+    "#7E28E2",
+    "#6B1BC5",
+    "#5716A2"
   ]);
 
 const offsets = {
@@ -57,7 +85,7 @@ const AreaChart = () => {
                 <Geography
                   key={geo.rsmKey}
                   geography={geo}
-                  fill={colorScale(cur ? cur.unemployment_rate : "#EEE")}
+                  fill={pinkScale(cur ? cur.unemployment_rate : "#EEE")}
                 />
               );
             })
