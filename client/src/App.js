@@ -1,18 +1,23 @@
 import React from 'react';
 import FileUpload from './components/FileUpload';
 import './App.css';
+import AreaChart from './graphs/AreaChart';
 
-function App() {
+// var React = require('react');
+var Component = React.Component;
+var CanvasJSReact = require('./assets/canvasjs.react');
+var CanvasJS = CanvasJSReact.CanvasJS;
+var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
-
-  return (
-    <div className="App">
-      
-      <div className="upload">
-        <FileUpload />
-      </div>
-    </div>
-  );
+class App extends Component {   
+    render() {
+        return (
+          <div className="app">
+            <AreaChart/>
+            <FileUpload/>
+          </div>
+        );
+    }
 }
 
 export default App;
