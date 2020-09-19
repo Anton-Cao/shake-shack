@@ -10,10 +10,21 @@ var CanvasJSReact = require('./assets/canvasjs.react');
 var CanvasJS = CanvasJSReact.CanvasJS;
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
+var rootStyle = {
+  backgroundColor : 'black',
+  color : 'white',
+  height : '100%'
+
+}
+
 class App extends Component {  
     render() {
         return (
-          <div className="app">
+          <div className="app"
+              style={
+                rootStyle
+              }>
+
             <AreaChart/>
             <BrowserRouter>
               <Switch>
