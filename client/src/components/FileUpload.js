@@ -2,7 +2,7 @@ import axios from 'axios';
   
 import React,{Component} from 'react'; 
 import { Button } from 'react-bootstrap';
-import {uid} from 'react-uid';
+import { v4 as uuidv4 } from 'uuid';
 import { Redirect } from 'react-router-dom';
   
 class FileUpload extends Component { 
@@ -39,7 +39,7 @@ class FileUpload extends Component {
       const formData = new FormData(); 
      
       // Update the formData object 
-      const key = uid(this.state.selectedFile);
+      const key = uuidv4();
       formData.append( 
         key, 
         this.state.selectedFile, 
