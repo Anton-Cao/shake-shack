@@ -1,48 +1,70 @@
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import CanvasJSReact from '../assets/canvasjs.react';
+import { geoCentroid } from "d3-geo";
+import { scaleQuantize } from "d3-scale";
+import { csv } from "d3-fetch";
+import {
+  ComposableMap,
+  Geographies,
+  Geography,
+  Marker,
+  Annotation
+} from "react-simple-maps";
+import allStates from "../data/allstates.json";
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
+
+const geoUrl = "https://cdn.jsdelivr.net/npm/us-atlas@3/counties-10m.json";
+
+const colorScale = scaleQuantize()
+  .domain([1, 10])
+  .range([
+    "#ffedea",
+    "#ffcec5",
+    "#ffad9f",
+    "#ff8a75",
+    "#ff5533",
+    "#e2492d",
+    "#be3d26",
+    "#9a311f",
+    "#782618"
+  ]);
+
+const offsets = {
+  VT: [50, -8],
+  NH: [34, 2],
+  MA: [30, -1],
+  RI: [28, 2],
+  CT: [35, 10],
+  NJ: [34, 1],
+  DE: [33, 0],
+  MD: [47, 10],
+  DC: [49, 21]
+};
  
-class AreaChart extends Component {
-    render() {
-        const options = {
-            theme: "light2",
-            animationEnabled: true,
-            exportEnabled: true,
-            title: {
-                text: "Number of iPhones Sold"
-            },
-            axisY: {
-                title: "Number of iPhones ( in Million )",
-                includeZero: false,
-            },
-            data: [
-            {
-                type: "area",
-                xValueFormatString: "YYYY",
-                yValueFormatString: "#,##0.## Million",
-                dataPoints: [
-                    { x: new Date(2017, 0), y: 7.6},
-                    { x: new Date(2016, 0), y: 7.3},
-                    { x: new Date(2015, 0), y: 6.4},
-                    { x: new Date(2014, 0), y: 5.3},
-                    { x: new Date(2013, 0), y: 4.5},
-                    { x: new Date(2012, 0), y: 3.8},
-                    { x: new Date(2011, 0), y: 3.2}
-                ]
-            }
-            ]
-        }
-        
-        return (
-        <div>
-            <h1>React Area Chart</h1>
-            <CanvasJSChart options = {options} 
-                /* onRef={ref => this.chart = ref} */
-            />
-            {/*You can get reference to the chart instance as shown above using onRef. This allows you to access all chart properties and methods*/}
-        </div>
-        );
-    }
+const AreaChart = () => {
+    const [data, setData] = useState([]);
+    useEffect(() => {
+        csv("/unemployment.csv").then(counties => {
+        setData(counties);});}, []);
+
+    return (
+      <ComposableMap projection="geoAlbersUsa">
+        <Geographies geography={geoUrl}>
+          {({ geographies }) =>
+            geographies.map(geo => {
+              const cur = data.find(s => s.id === geo.id);
+              return (
+                <Geography
+                  key={geo.rsmKey}
+                  geography={geo}
+                  fill={colorScale(cur ? cur.unemployment_rate : "#EEE")}
+                />
+              );
+            })
+          }
+        </Geographies>
+      </ComposableMap>
+      );
 }
 
 export default AreaChart;
