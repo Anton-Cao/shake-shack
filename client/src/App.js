@@ -2,7 +2,7 @@ import React from 'react';
 import {BrowserRouter, Switch, Route } from "react-router-dom";
 import User from './components/User';
 import './App.css';
-import AreaChart from "./graphs/AreaChart";
+import CountyMap from "./graphs/CountyMap";
 
 // var React = require('react');
 var Component = React.Component;

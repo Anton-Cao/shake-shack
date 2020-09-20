@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import AreaChart from '../graphs/AreaChart';
+import CountyMap from '../graphs/CountyMap';
 import FileUpload from './FileUpload';
 import { withRouter } from "react-router";
 
@@ -9,14 +9,14 @@ class User extends Component {
         if (key) {
             return (
                 <div className="upload">
-                    <AreaChart key={key} />
+                    <CountyMap key={key} />
                     <FileUpload />
                 </div>
             );
         } else {
             return (
                 <div className="upload">
-                    <AreaChart />
+                    <CountyMap />
                     <FileUpload />
                 </div>
             );
