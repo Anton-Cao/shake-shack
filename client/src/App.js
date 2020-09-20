@@ -27,7 +27,6 @@ class App extends Component {
               }>
             <img src={'/Vizit_Logo.png'}/>
             <h3> Upload your data, and Viz it! Our platform will automatically extrapolate and present your data in a visually appealing and easy-to-understand manner. </h3>
-            <AreaChart/>
             <BrowserRouter>
               <Switch>
                 <Route path="/:key" children={<User />} />
