@@ -19,6 +19,7 @@ class User extends Component {
         } else{
             return (
             <div className="upload"> 
+                <AreaChart/>
                 <FileUpload/>
             
             </div> 
