@@ -27,12 +27,11 @@ class App extends Component {
             <h3> Upload your data, and Viz it! Our platform will automatically extrapolate and present your data in a visually appealing and easy-to-understand manner. </h3>
             <BrowserRouter>
               <Switch>
-                <Route path="/:key" children={<User />} />
+                <Route path="/world/:key" children={<User map="world" />} />
+                <Route path="/usa/:key" children={<User map="usa" />} />
                 <Route path="/" children={<User />} />
               </Switch>
             </BrowserRouter>
-            <Button variant="outline-primary">World Map: By Country </Button>{' '}
-            <Button variant="outline-secondary">USA Map: By County </Button>{' '}
           </div>
         );
     }

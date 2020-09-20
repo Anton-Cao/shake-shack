@@ -12,7 +12,7 @@ class FileUpload extends Component {
       // Initially, no file is selected 
       selectedFile: null,
       isCsv: true,
-      redirect: false,
+      redirect: null,
       key: null,
     }; 
      
@@ -32,8 +32,15 @@ class FileUpload extends Component {
      
     }; 
      
+    onFileUploadWorld = () => {
+        this.onFileUpload("/world/");
+    }
+
+    onFileUploadUSA = () => {
+        this.onFileUpload("/usa/");
+    }
     // On file upload (click the upload button) 
-    onFileUpload = () => { 
+    onFileUpload = (location) => { 
      
       // Create an object of formData 
       const formData = new FormData(); 
@@ -52,7 +59,7 @@ class FileUpload extends Component {
       // Request made to the backend api 
       // Send formData object 
       axios.post("api/uploadfile", formData); 
-      this.setState({redirect: true, key: key});
+      this.setState({redirect: location, key: key});
     }; 
      
     // File content to be displayed after 
@@ -86,7 +93,7 @@ class FileUpload extends Component {
     
     redirect = () => {
         if (this.state.redirect) {
-            return <Redirect to ={'/'+this.state.key}  />
+            return <Redirect to ={this.state.redirect+this.state.key}  />
         }
     }
      
@@ -100,9 +107,8 @@ class FileUpload extends Component {
             </h3> 
             <div> 
                 <input type="file" onChange={this.onFileChange} /> 
-                <Button onClick={this.onFileUpload}> 
-                  Upload! 
-                </Button> 
+                <Button variant="outline-primary" onClick={this.onFileUploadWorld}>World Map: By Country </Button>{' '}
+                <Button variant="outline-secondary" onClick={this.onFileUploadUSA}>USA Map: By County </Button>{' '}
                 {this.notCsv()}
             </div> 
         </div> 

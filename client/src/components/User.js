@@ -7,12 +7,14 @@ class User extends Component {
     getKey = () => {
         const key = this.props.match.params.key;
         if (key) {
-            return (
-                <div className="upload">
-                    <CountyMap key={key} />
-                    <FileUpload />
-                </div>
-            );
+            if (this.props.map === 'usa') {
+                return (
+                    <div className="upload">
+                        <CountyMap key={key} />
+                        <FileUpload />
+                    </div>
+                );
+            }
         } else {
             return (
                 <div className="upload">
