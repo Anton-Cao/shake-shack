@@ -18,7 +18,7 @@ class User extends Component {
             } else {
                 return (
                     <div className="upload">
-                        <WorldMap name={key} />
+                        <WorldMap />
                         <FileUpload />
                     </div>
                 );
