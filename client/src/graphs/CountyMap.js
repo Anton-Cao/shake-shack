@@ -75,18 +75,17 @@ function Display(props) {
 
 function Toggle(props) {
   const marks = [];
-  console.log('props', props);
   for (let ts of props.timestamps) {
     marks.push({
       value: ts,
       label: ts
     });
   }
-  console.log('default', props.timestamps[0]);
   return (<Slider
     style={divStyle}
     onChange={(event, value) => {
       props.timestampFn(value);
+      props.valFn(props.currData[value].unemployment_rate);
     }}
     defaultValue={props.timestamps[0]}
     aria-labelledby="discrete-slider"
@@ -102,6 +101,7 @@ const CountyMap = (props) => {
   const [data, setData] = useState({});
   const [location, setLocation] = useState("");
   const [number, setNumber] = useState("");
+  const [currdata, setCurrdata] = useState([]);
 
   const [hasTimestamps, setHasTimestamps] = useState(false);
   const [timestamps, setTimestamps] = useState([]);
@@ -142,7 +142,6 @@ const CountyMap = (props) => {
     };
 
     if (props.name) {
-      console.log('name', props.name);
       axios.get('/api/data/' + props.name)
         .then(function (response) {
           // handle success
@@ -161,7 +160,7 @@ const CountyMap = (props) => {
         hasTimestamps ?
           <div style={divStyle}>
             <label>Timestamp: </label>
-            <Toggle timestampFn={setTimestamp} timestamps={timestamps} />
+            <Toggle timestampFn={setTimestamp} valFn={setNumber} currData={currdata} timestamps={timestamps} />
           </div>
           : <></>
       }
@@ -171,21 +170,28 @@ const CountyMap = (props) => {
         <Geographies geography={geoUrl}>
           {({ geographies }) =>
             geographies.map(geo => {
-              let cur;
+              {/*let cur;
               if (hasTimestamps) {
                 if (data[geo.id]) {
                   cur = data[geo.id][timestamp];
                 }
               } else {
                 cur = data[geo.id];
-              }
+              }*/}
+              let cur = data[geo.id];
               if (cur) {
                 return (
                   <Geography
                     key={geo.rsmKey}
                     geography={geo}
-                    fill={blueScale(cur ? cur.unemployment_rate : "#EEE")}
-                    onClick={(e) => (setLocation(cur.name), setNumber(cur.unemployment_rate))}
+                    fill={blueScale(cur[timestamp] ? cur[timestamp].unemployment_rate : "#EEE")}
+                    onClick={(e) => {
+                        setCurrdata(cur);
+                        if(currdata[timestamp]){
+                            setLocation(currdata[timestamp].name); 
+                            setNumber(currdata[timestamp].unemployment_rate);
+                        }
+                    }}
                   />
                 );
               }
