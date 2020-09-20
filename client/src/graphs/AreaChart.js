@@ -83,26 +83,77 @@ const AreaChart = () => {
   const [location, setLocation] = useState("");
   const [number, setNumber] = useState("");
 
+  const [hasTimestamps, setHasTimestamps] = useState(false);
+  const [timestamps, setTimestamps] = useState([]);
+  const [timestamp, setTimestamp] = useState(0);
+
+
   useEffect(() => {
-    csv("/unemployment.csv").then(counties => {
-      const newData = {};
+    csv("/unemployment_timestamps.csv").then(counties => {
+      let hasTs = counties.length > 0;
       counties.forEach((county) => {
-        newData[county.id] = county;
+        if (!county.timestamp) {
+          hasTs = false;
+        }
       });
-      setData(newData);
+      setHasTimestamps(hasTs);
+
+      if (hasTs) {
+        const ts = new Set();
+        const newData = {};
+        counties.forEach((county) => {
+          ts.add(county.timestamp);
+          if (!(county.id in newData)) {
+            newData[county.id] = {};
+          }
+          newData[county.id][county.timestamp] = county;
+        });
+        const tsArray = Array.from(ts);
+        setData(newData);
+        setTimestamps(tsArray);
+        setTimestamp(tsArray[0]);
+      } else {
+        const newData = {};
+        counties.forEach((county) => {
+          newData[county.id] = county;
+        });
+        setData(newData);
+      }
+
     });
   }, []);
 
-
   return (
     <React.Fragment>
+      {
+        hasTimestamps ?
+          <div>
+            <label>Timestamp: </label>
+            <select onChange={(event) => {
+              console.log('clicked', event.target.value);
+              setTimestamp(event.target.value);
+            }} value={timestamp}>
+              {timestamps.map((ts) => {
+                return <option key={ts} value={ts}>{ts}</option>;
+              })}
+            </select>
+          </div>
+          : <></>
+      }
       <Display attribute={"Location"} message={location} />
       <Display attribute={"Population"} message={number} />
       <ComposableMap projection="geoAlbersUsa">
         <Geographies geography={geoUrl}>
           {({ geographies }) =>
             geographies.map(geo => {
-              const cur = data[geo.id];
+              let cur;
+              if (hasTimestamps) {
+                if (data[geo.id]) {
+                  cur = data[geo.id][timestamp];
+                }
+              } else {
+                cur = data[geo.id];
+              }
               if (cur) {
                 return (
                   <Geography
@@ -117,7 +168,7 @@ const AreaChart = () => {
           }
         </Geographies>
       </ComposableMap>
-    </React.Fragment>
+    </React.Fragment >
   );
 }
 
