@@ -3,6 +3,7 @@ import CanvasJSReact from '../assets/canvasjs.react';
 import { geoCentroid } from "d3-geo";
 import { scaleQuantize } from "d3-scale";
 import { csv } from "d3-fetch";
+import '../App.css';
 import {
   ComposableMap,
   Geographies,
@@ -57,9 +58,14 @@ const purpleScale = scaleQuantize()
     "#5716A2"
   ]);
 
+const divStyle = {
+  color: "#FED766",
+  fontSize: 40,
+};
+
 function Display(props){
     return(
-      <div>
+      <div style={divStyle}>
         {props.attribute + ": " + props.message}
       </div>
     );
