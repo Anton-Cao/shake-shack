@@ -11,14 +11,14 @@ class User extends Component {
             if (this.props.map === 'usa') {
                 return (
                     <div className="upload">
-                        <CountyMap key={key} />
+                        <CountyMap name={key} />
                         <FileUpload />
                     </div>
                 );
             } else {
                 return (
                     <div className="upload">
-                        <WorldMap key={key} />
+                        <WorldMap name={key} />
                         <FileUpload />
                     </div>
                 );

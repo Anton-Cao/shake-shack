@@ -107,7 +107,6 @@ const CountyMap = (props) => {
   const [timestamps, setTimestamps] = useState([]);
   const [timestamp, setTimestamp] = useState(0);
 
-
   useEffect(() => {
     const processData = (counties) => {
       let hasTs = counties.length > 0;

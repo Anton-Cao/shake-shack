@@ -21,7 +21,11 @@ app.get('/ping', function (req, res) {
 
 app.get('/api/data/:key', function (req, res) {
     Dataset.findById(req.params.key, function (err, ds) {
-        res.send(ds.data);
+        if (ds) {
+            res.send(ds.data);
+        } else {
+            res.send([])
+        }
     });
 });
 
