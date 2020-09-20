@@ -18,21 +18,6 @@ var rootStyle = {
 
 }
 
-const Home = _ => 
-  <div>
-    <Helmet>   
-      <title> VisIt Title </title> 
-    </Helmet>
-    VisIt
-  </div>
-  
-const About = _ => 
-  <div>
-    <Helmet>
-      <title>VizIt </title>
-    </Helmet>
-    Upload your data, and Viz it! Our platform will automatically extrapolate and present your data in a visually appealing and easy-to-understand manner. 
-  </div>
 
 class App extends Component {  
     render() {
@@ -41,8 +26,8 @@ class App extends Component {
               style={
                 rootStyle
               }>
-            <Home/>
-            <About/>
+            <h1>VizIt</h1>
+            <h2> Upload your data, and Viz it! Our platform will automatically extrapolate and present your data in a visually appealing and easy-to-understand manner. </h2>
             <AreaChart/>
             <BrowserRouter>
               <Switch>
