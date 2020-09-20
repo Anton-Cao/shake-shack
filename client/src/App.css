@@ -24,6 +24,10 @@
   font-size: calc(50px + 2vmin);
 }
 
+.MuiSlider-valueLabel{
+    color: #009FB7;
+}
+
 .App-link {
   color: 'black';
 }

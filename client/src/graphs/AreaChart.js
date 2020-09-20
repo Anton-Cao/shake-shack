@@ -3,6 +3,7 @@ import CanvasJSReact from '../assets/canvasjs.react';
 import { geoCentroid } from "d3-geo";
 import { scaleQuantize } from "d3-scale";
 import { csv } from "d3-fetch";
+import { Slider } from '@material-ui/core';
 import '../App.css';
 import {
   ComposableMap,
@@ -65,10 +66,26 @@ const divStyle = {
 
 function Display(props) {
   return (
-    <div>
+    <div style={divStyle}>
       {props.attribute + ": " + props.message}
     </div>
   );
+}
+
+function Toggle(props){
+    return(<Slider 
+        style={divStyle}
+        onChange={(event, value) => {
+            props.timestampFn(value);
+        }}
+        defaultValue={100}
+        aria-labelledby="discrete-slider"
+        valueLabelDisplay="auto"
+        step={100}
+        marks
+        min={100}
+        max={500}
+    />);
 }
 
 const AreaChart = () => {
@@ -120,16 +137,9 @@ const AreaChart = () => {
     <React.Fragment>
       {
         hasTimestamps ?
-          <div>
+          <div style={divStyle}>
             <label>Timestamp: </label>
-            <select onChange={(event) => {
-              console.log('clicked', event.target.value);
-              setTimestamp(event.target.value);
-            }} value={timestamp}>
-              {timestamps.map((ts) => {
-                return <option key={ts} value={ts}>{ts}</option>;
-              })}
-            </select>
+             <Toggle timestampFn={setTimestamp}/>
           </div>
           : <></>
       }
