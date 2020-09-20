@@ -3,7 +3,6 @@ import {BrowserRouter, Switch, Route } from "react-router-dom";
 import User from './components/User';
 import './App.css';
 import AreaChart from "./graphs/AreaChart";
-import { Helmet } from 'react-helmet'
 
 // var React = require('react');
 var Component = React.Component;

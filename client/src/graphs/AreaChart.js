@@ -2,6 +2,7 @@ import React, { Component, useState, useEffect } from 'react';
 import CanvasJSReact from '../assets/canvasjs.react';
 import { geoCentroid } from "d3-geo";
 import { scaleQuantize } from "d3-scale";
+import Popup from 'reactjs-popup';
 import { csv } from "d3-fetch";
 import {
   ComposableMap,
@@ -29,7 +30,7 @@ const pinkScale = scaleQuantize()
     "#AA0E47"
   ]);
 
-  const blueScale = scaleQuantize()
+const blueScale = scaleQuantize()
   .domain([1, 10])
   .range([
     "#FFFFFF",
@@ -43,7 +44,7 @@ const pinkScale = scaleQuantize()
     "#009FB7"
   ]);
 
-  const purpleScale = scaleQuantize()
+const purpleScale = scaleQuantize()
   .domain([1, 10])
   .range([
     "#FFFFFF",
@@ -68,14 +69,29 @@ const offsets = {
   MD: [47, 10],
   DC: [49, 21]
 };
+
+function Display(props){
+    return(
+      <div>
+        {props.attribute + ": " + props.message}
+      </div>
+    );
+}
  
 const AreaChart = () => {
     const [data, setData] = useState([]);
+    const [location, setLocation] = useState("");
+    const [number, setNumber] = useState("");
+
     useEffect(() => {
         csv("/unemployment.csv").then(counties => {
         setData(counties);});}, []);
 
+
     return (
+        <React.Fragment>
+    <Display attribute={"Location"} message={location}/>
+    <Display attribute={"Population"} message={number}/>
       <ComposableMap projection="geoAlbersUsa">
         <Geographies geography={geoUrl}>
           {({ geographies }) =>
@@ -85,13 +101,15 @@ const AreaChart = () => {
                 <Geography
                   key={geo.rsmKey}
                   geography={geo}
-                  fill={pinkScale(cur ? cur.unemployment_rate : "#EEE")}
+                  fill={blueScale(cur ? cur.unemployment_rate : "#EEE")}
+                  onClick={(e) => (setLocation(cur.name), setNumber(cur.unemployment_rate))}
                 />
               );
             })
           }
         </Geographies>
       </ComposableMap>
+      </React.Fragment>
       );
 }
 
