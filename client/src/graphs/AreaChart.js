@@ -2,8 +2,8 @@ import React, { Component, useState, useEffect } from 'react';
 import CanvasJSReact from '../assets/canvasjs.react';
 import { geoCentroid } from "d3-geo";
 import { scaleQuantize } from "d3-scale";
-import Popup from 'reactjs-popup';
 import { csv } from "d3-fetch";
+import '../App.css';
 import {
   ComposableMap,
   Geographies,
@@ -58,16 +58,9 @@ const purpleScale = scaleQuantize()
     "#5716A2"
   ]);
 
-const offsets = {
-  VT: [50, -8],
-  NH: [34, 2],
-  MA: [30, -1],
-  RI: [28, 2],
-  CT: [35, 10],
-  NJ: [34, 1],
-  DE: [33, 0],
-  MD: [47, 10],
-  DC: [49, 21]
+const divStyle = {
+  color: "#FED766",
+  fontSize: 40,
 };
 
 function Display(props) {

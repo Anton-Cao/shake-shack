@@ -11,17 +11,14 @@ class User extends Component {
                 <div className="upload">
                     <AreaChart key={key} />
                     <FileUpload />
-
                 </div>
-
             );
         } else {
             return (
                 <div className="upload">
+                    <AreaChart />
                     <FileUpload />
-
                 </div>
-
             );
         }
     }
