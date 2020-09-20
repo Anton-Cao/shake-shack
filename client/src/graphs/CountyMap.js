@@ -3,6 +3,7 @@ import CanvasJSReact from '../assets/canvasjs.react';
 import { geoCentroid } from "d3-geo";
 import { scaleQuantize } from "d3-scale";
 import { csv } from "d3-fetch";
+import { Slider } from '@material-ui/core';
 import '../App.css';
 import {
   ComposableMap,
@@ -66,13 +67,38 @@ const divStyle = {
 
 function Display(props) {
   return (
-    <div>
+    <div style={divStyle}>
       {props.attribute + ": " + props.message}
     </div>
   );
 }
 
-const AreaChart = (props) => {
+function Toggle(props) {
+  const marks = [];
+  console.log('props', props);
+  for (let ts of props.timestamps) {
+    marks.push({
+      value: ts,
+      label: ts
+    });
+  }
+  console.log('default', props.timestamps[0]);
+  return (<Slider
+    style={divStyle}
+    onChange={(event, value) => {
+      props.timestampFn(value);
+    }}
+    defaultValue={props.timestamps[0]}
+    aria-labelledby="discrete-slider"
+    valueLabelDisplay="on"
+    step={null}
+    marks={marks}
+    min={props.timestamps[0]}
+    max={props.timestamps[props.timestamps.length - 1]}
+  />);
+}
+
+const CountyMap = (props) => {
   const [data, setData] = useState({});
   const [location, setLocation] = useState("");
   const [number, setNumber] = useState("");
@@ -83,7 +109,6 @@ const AreaChart = (props) => {
 
 
   useEffect(() => {
-    console.log("name???", props.name);
     const processData = (counties) => {
       let hasTs = counties.length > 0;
       counties.forEach((county) => {
@@ -91,19 +116,19 @@ const AreaChart = (props) => {
           hasTs = false;
         }
       });
-      setHasTimestamps(hasTs);
 
       if (hasTs) {
         const ts = new Set();
         const newData = {};
         counties.forEach((county) => {
-          ts.add(county.timestamp);
+          ts.add(parseInt(county.timestamp));
           if (!(county.id in newData)) {
             newData[county.id] = {};
           }
           newData[county.id][county.timestamp] = county;
         });
         const tsArray = Array.from(ts);
+        tsArray.sort();
         setData(newData);
         setTimestamps(tsArray);
         setTimestamp(tsArray[0]);
@@ -114,9 +139,11 @@ const AreaChart = (props) => {
         });
         setData(newData);
       }
+      setHasTimestamps(hasTs);
     };
 
     if (props.name) {
+      console.log('name', props.name);
       axios.get('/api/data/' + props.name)
         .then(function (response) {
           // handle success
@@ -127,22 +154,15 @@ const AreaChart = (props) => {
         processData(counties);
       });
     }
-  }, []);
+  }, [props.name]);
 
   return (
     <React.Fragment>
       {
         hasTimestamps ?
-          <div>
+          <div style={divStyle}>
             <label>Timestamp: </label>
-            <select onChange={(event) => {
-              console.log('clicked', event.target.value);
-              setTimestamp(event.target.value);
-            }} value={timestamp}>
-              {timestamps.map((ts) => {
-                return <option key={ts} value={ts}>{ts}</option>;
-              })}
-            </select>
+            <Toggle timestampFn={setTimestamp} timestamps={timestamps} />
           </div>
           : <></>
       }
@@ -178,4 +198,4 @@ const AreaChart = (props) => {
   );
 }
 
-export default AreaChart;
+export default CountyMap;
