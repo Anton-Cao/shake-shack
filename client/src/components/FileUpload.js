@@ -1,6 +1,6 @@
-import axios from 'axios'; 
-  
-import React,{Component} from 'react'; 
+import axios from 'axios';
+
+import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
 import { v4 as uuidv4 } from 'uuid';
 import { Redirect } from 'react-router-dom';

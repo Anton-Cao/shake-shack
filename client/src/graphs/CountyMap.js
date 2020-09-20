@@ -13,6 +13,7 @@ import {
   Annotation
 } from "react-simple-maps";
 import allStates from "../data/allstates.json";
+import axios from 'axios';
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 const geoUrl = "https://cdn.jsdelivr.net/npm/us-atlas@3/counties-10m.json";
@@ -72,23 +73,32 @@ function Display(props) {
   );
 }
 
-function Toggle(props){
-    return(<Slider 
-        style={divStyle}
-        onChange={(event, value) => {
-            props.timestampFn(value);
-        }}
-        defaultValue={100}
-        aria-labelledby="discrete-slider"
-        valueLabelDisplay="auto"
-        step={100}
-        marks
-        min={100}
-        max={500}
-    />);
+function Toggle(props) {
+  const marks = [];
+  console.log('props', props);
+  for (let ts of props.timestamps) {
+    marks.push({
+      value: ts,
+      label: ts
+    });
+  }
+  console.log('default', props.timestamps[0]);
+  return (<Slider
+    style={divStyle}
+    onChange={(event, value) => {
+      props.timestampFn(value);
+    }}
+    defaultValue={props.timestamps[0]}
+    aria-labelledby="discrete-slider"
+    valueLabelDisplay="on"
+    step={null}
+    marks={marks}
+    min={props.timestamps[0]}
+    max={props.timestamps[props.timestamps.length - 1]}
+  />);
 }
 
-const CountyMap = () => {
+const CountyMap = (props) => {
   const [data, setData] = useState({});
   const [location, setLocation] = useState("");
   const [number, setNumber] = useState("");
@@ -99,26 +109,26 @@ const CountyMap = () => {
 
 
   useEffect(() => {
-    csv("/unemployment_timestamps.csv").then(counties => {
+    const processData = (counties) => {
       let hasTs = counties.length > 0;
       counties.forEach((county) => {
         if (!county.timestamp) {
           hasTs = false;
         }
       });
-      setHasTimestamps(hasTs);
 
       if (hasTs) {
         const ts = new Set();
         const newData = {};
         counties.forEach((county) => {
-          ts.add(county.timestamp);
+          ts.add(parseInt(county.timestamp));
           if (!(county.id in newData)) {
             newData[county.id] = {};
           }
           newData[county.id][county.timestamp] = county;
         });
         const tsArray = Array.from(ts);
+        tsArray.sort();
         setData(newData);
         setTimestamps(tsArray);
         setTimestamp(tsArray[0]);
@@ -129,9 +139,22 @@ const CountyMap = () => {
         });
         setData(newData);
       }
+      setHasTimestamps(hasTs);
+    };
 
-    });
-  }, []);
+    if (props.name) {
+      console.log('name', props.name);
+      axios.get('/api/data/' + props.name)
+        .then(function (response) {
+          // handle success
+          processData(response.data);
+        });
+    } else {
+      csv("/unemployment_timestamps.csv").then(counties => {
+        processData(counties);
+      });
+    }
+  }, [props.name]);
 
   return (
     <React.Fragment>
@@ -139,7 +162,7 @@ const CountyMap = () => {
         hasTimestamps ?
           <div style={divStyle}>
             <label>Timestamp: </label>
-             <Toggle timestampFn={setTimestamp}/>
+            <Toggle timestampFn={setTimestamp} timestamps={timestamps} />
           </div>
           : <></>
       }

@@ -29,7 +29,6 @@ class User extends Component {
         return (
             <div>
                 {this.getKey()}
-
             </div>
         );
     }
