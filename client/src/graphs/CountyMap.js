@@ -186,10 +186,10 @@ const CountyMap = (props) => {
                     geography={geo}
                     fill={blueScale(cur[timestamp] ? cur[timestamp].unemployment_rate : "#EEE")}
                     onClick={(e) => {
-                        setCurrdata(cur);
-                        if(currdata[timestamp]){
-                            setLocation(currdata[timestamp].name); 
-                            setNumber(currdata[timestamp].unemployment_rate);
+                        if(cur[timestamp]){
+                            setLocation(cur[timestamp].name); 
+                            setCurrdata(cur);
+                            setNumber(cur[timestamp].unemployment_rate);
                         }
                     }}
                   />
