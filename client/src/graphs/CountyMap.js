@@ -166,7 +166,7 @@ const CountyMap = (props) => {
           : <></>
       }
       <Display attribute={"Location"} message={location} />
-      <Display attribute={"Population"} message={number} />
+      <Display attribute={"Unemployment Rate"} message={number} />
       <ComposableMap projection="geoAlbersUsa">
         <Geographies geography={geoUrl}>
           {({ geographies }) =>
