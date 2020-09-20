@@ -9,7 +9,7 @@ class User extends Component {
         if (key) {
             return (
                 <div className="upload">
-                    <AreaChart key={key} />
+                    <AreaChart name={key} />
                     <FileUpload />
                 </div>
             );
@@ -27,7 +27,6 @@ class User extends Component {
         return (
             <div>
                 {this.getKey()}
-
             </div>
         );
     }

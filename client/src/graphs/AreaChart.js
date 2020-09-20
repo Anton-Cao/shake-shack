@@ -12,6 +12,7 @@ import {
   Annotation
 } from "react-simple-maps";
 import allStates from "../data/allstates.json";
+import axios from 'axios';
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 const geoUrl = "https://cdn.jsdelivr.net/npm/us-atlas@3/counties-10m.json";
@@ -71,7 +72,7 @@ function Display(props) {
   );
 }
 
-const AreaChart = () => {
+const AreaChart = (props) => {
   const [data, setData] = useState({});
   const [location, setLocation] = useState("");
   const [number, setNumber] = useState("");
@@ -82,7 +83,8 @@ const AreaChart = () => {
 
 
   useEffect(() => {
-    csv("/unemployment_timestamps.csv").then(counties => {
+    console.log("name???", props.name);
+    const processData = (counties) => {
       let hasTs = counties.length > 0;
       counties.forEach((county) => {
         if (!county.timestamp) {
@@ -112,8 +114,19 @@ const AreaChart = () => {
         });
         setData(newData);
       }
+    };
 
-    });
+    if (props.name) {
+      axios.get('/api/data/' + props.name)
+        .then(function (response) {
+          // handle success
+          processData(response.data);
+        });
+    } else {
+      csv("/unemployment_timestamps.csv").then(counties => {
+        processData(counties);
+      });
+    }
   }, []);
 
   return (
