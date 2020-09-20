@@ -85,7 +85,9 @@ function Toggle(props) {
     style={divStyle}
     onChange={(event, value) => {
       props.timestampFn(value);
-      props.valFn(props.currData[value].unemployment_rate);
+      if(props.currData[value]){
+        props.valFn(props.currData[value].unemployment_rate);
+      }
     }}
     defaultValue={props.timestamps[0]}
     aria-labelledby="discrete-slider"
@@ -170,14 +172,6 @@ const CountyMap = (props) => {
         <Geographies geography={geoUrl}>
           {({ geographies }) =>
             geographies.map(geo => {
-              {/*let cur;
-              if (hasTimestamps) {
-                if (data[geo.id]) {
-                  cur = data[geo.id][timestamp];
-                }
-              } else {
-                cur = data[geo.id];
-              }*/}
               let cur = data[geo.id];
               if (cur) {
                 return (

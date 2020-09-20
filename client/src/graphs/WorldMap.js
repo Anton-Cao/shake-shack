@@ -42,6 +42,9 @@ function Toggle(props) {
     style={divStyle}
     onChange={(event, value) => {
       props.timestampFn(value);
+      if(props.currData[value]){
+        props.valFn(props.currData[value].c_newinc);
+      }
     }}
     defaultValue={props.timestamps[0]}
     aria-labelledby="discrete-slider"
@@ -57,6 +60,7 @@ const WorldMap = (props) => {
   const [data, setData] = useState([]);
   const [location, setLocation] = useState("");
   const [number, setNumber] = useState("");
+  const [currdata, setCurrdata] = useState([]);
 
   const [hasTimestamps, setHasTimestamps] = useState(true);
   const [timestamps, setTimestamps] = useState([]);
@@ -118,7 +122,7 @@ const WorldMap = (props) => {
             hasTimestamps ?
                 <div style={divStyle}>
                     <label>Timestamp: </label>
-                    <Toggle timestampFn={setTimestamp} timestamps={timestamps} />
+                    <Toggle timestampFn={setTimestamp} valFn={setNumber} currData={currdata} timestamps={timestamps} />
                 </div>
             : <></>
         }
@@ -130,23 +134,20 @@ const WorldMap = (props) => {
           <Geographies geography={geoUrl}>
               {({ geographies }) =>
                 geographies.map((geo) => {
-                    console.log(geo.properties.ISO_A3);
-                    let cur;
-                    if (hasTimestamps) {
-                        if (data[geo.properties.ISO_A3]) {
-                            cur = data[geo.properties.ISO_A3][timestamp];
-                        }
-                    } 
-                    else {
-                        cur = data[geo.properties.ISO_A3];
-                    }
+                    let cur = data[geo.properties.ISO_A3];
                     if (cur) {
                       return (
                         <Geography
                           key={geo.rsmKey}
                           geography={geo}
-                          fill={cur ? colorScale(cur.c_newinc) : "#F5F4F6"}
-                          onClick={(e) => (setLocation(geo.properties.NAME), setNumber(cur.c_newinc))}
+                          fill={cur[timestamp] ? colorScale(cur[timestamp].c_newinc) : "#F5F4F6"}
+                          onClick={(e) => {
+                            if(cur[timestamp]){
+                                setLocation(cur[timestamp].country);
+                                setCurrdata(cur);
+                                setNumber(cur[timestamp].c_newinc);
+                            }
+                          }}
                         />
                       );
                     }
