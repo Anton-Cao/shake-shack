@@ -25,8 +25,8 @@ class App extends Component {
               style={
                 rootStyle
               }>
-            <h1>VizIt</h1>
-            <h2> Upload your data, and Viz it! Our platform will automatically extrapolate and present your data in a visually appealing and easy-to-understand manner. </h2>
+            <img src={'/Vizit_Logo.png'}/>
+            <h3> Upload your data, and Viz it! Our platform will automatically extrapolate and present your data in a visually appealing and easy-to-understand manner. </h3>
             <AreaChart/>
             <BrowserRouter>
               <Switch>
