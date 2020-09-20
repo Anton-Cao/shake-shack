@@ -22,7 +22,6 @@
   align-items: center;
   justify-content: center;
   font-size: calc(50px + 2vmin);
-  color: 'black';
 }
 
 .App-link {
@@ -30,8 +29,7 @@
 }
 
 body {
-  background-color: 'black';
-  color: 'black';
+  background-color: black;
   padding: 10px;
   font-family: Raleway;
   text-align: center;
