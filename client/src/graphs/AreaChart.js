@@ -70,47 +70,55 @@ const offsets = {
   DC: [49, 21]
 };
 
-function Display(props){
-    return(
-      <div>
-        {props.attribute + ": " + props.message}
-      </div>
-    );
+function Display(props) {
+  return (
+    <div>
+      {props.attribute + ": " + props.message}
+    </div>
+  );
 }
- 
+
 const AreaChart = () => {
-    const [data, setData] = useState([]);
-    const [location, setLocation] = useState("");
-    const [number, setNumber] = useState("");
+  const [data, setData] = useState({});
+  const [location, setLocation] = useState("");
+  const [number, setNumber] = useState("");
 
-    useEffect(() => {
-        csv("/unemployment.csv").then(counties => {
-        setData(counties);});}, []);
+  useEffect(() => {
+    csv("/unemployment.csv").then(counties => {
+      const newData = {};
+      counties.forEach((county) => {
+        newData[county.id] = county;
+      });
+      setData(newData);
+    });
+  }, []);
 
 
-    return (
-        <React.Fragment>
-    <Display attribute={"Location"} message={location}/>
-    <Display attribute={"Population"} message={number}/>
+  return (
+    <React.Fragment>
+      <Display attribute={"Location"} message={location} />
+      <Display attribute={"Population"} message={number} />
       <ComposableMap projection="geoAlbersUsa">
         <Geographies geography={geoUrl}>
           {({ geographies }) =>
             geographies.map(geo => {
-              const cur = data.find(s => s.id === geo.id);
-              return (
-                <Geography
-                  key={geo.rsmKey}
-                  geography={geo}
-                  fill={blueScale(cur ? cur.unemployment_rate : "#EEE")}
-                  onClick={(e) => (setLocation(cur.name), setNumber(cur.unemployment_rate))}
-                />
-              );
+              const cur = data[geo.id];
+              if (cur) {
+                return (
+                  <Geography
+                    key={geo.rsmKey}
+                    geography={geo}
+                    fill={blueScale(cur ? cur.unemployment_rate : "#EEE")}
+                    onClick={(e) => (setLocation(cur.name), setNumber(cur.unemployment_rate))}
+                  />
+                );
+              }
             })
           }
         </Geographies>
       </ComposableMap>
-      </React.Fragment>
-      );
+    </React.Fragment>
+  );
 }
 
 export default AreaChart;
